@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peoplebox.ai · Bhanu Kumar · PMM Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:    #07090d;
+  --bg2:   #0c0f16;
+  --bg3:   #12161f;
+  --bg4:   #181c28;
+  --bg5:   #1f2535;
+  --bdr:   rgba(255,255,255,0.055);
+  --bmd:   rgba(255,255,255,0.10);
+  --blg:   rgba(255,255,255,0.18);
+  --t1:    #edeef2;
+  --t2:    #8b8fa0;
+  --t3:    #444860;
+
+  --vi:      #7c6ff7;
+  --vi2:     #9a90fa;
+  --vi-dim:  rgba(124,111,247,0.10);
+  --vi-glow: rgba(124,111,247,0.18);
+  --vi-t:    #b0a9fb;
+
+  --am:      #f0a94a;
+  --am-dim:  rgba(240,169,74,0.10);
+  --am-t:    #f5c07a;
+
+  --grn:     #3ecf8e;
+  --grn-dim: rgba(62,207,142,0.09);
+
+  --red:     #e05858;
+  --red-dim: rgba(224,88,88,0.09);
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{
+  background:var(--bg);color:var(--t1);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* reading bar */
+#rbar{position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--vi),var(--am));
+  z-index:999;width:0;transition:width .08s linear}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:300;
+  background:rgba(7,9,13,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bdr);
+  padding:0 5vw;
+}
+.nav-i{
+  max-width:1160px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:54px;gap:16px;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--t3);letter-spacing:.06em;
+}
+.nav-brand .sep{color:var(--t3);margin:0 6px}
+.nav-brand .hi{color:var(--vi-t)}
+.nav-links{display:flex;gap:2px}
+.nl{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;
+  padding:5px 13px;border-radius:100px;border:1px solid transparent;
+  color:var(--t3);text-decoration:none;
+  transition:all .13s;white-space:nowrap;
+}
+.nl:hover{border-color:var(--bdr);color:var(--t2)}
+.nl.cta{background:var(--vi-dim);border-color:rgba(124,111,247,.22);color:var(--vi-t)}
+.nl.cta:hover{background:rgba(124,111,247,.18);border-color:rgba(124,111,247,.38)}
+.hbg{
+  display:none;flex-direction:column;gap:5px;
+  cursor:pointer;background:none;border:none;padding:4px;flex-shrink:0;
+}
+.hbg span{display:block;width:20px;height:1.5px;background:var(--t1);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-menu{
+  display:none;position:fixed;inset:0;top:54px;
+  background:var(--bg);z-index:290;
+  flex-direction:column;padding:28px 5vw;
+  border-top:1px solid var(--bdr);
+}
+.mob-menu.open{display:flex}
+.mob-menu a{
+  display:block;font-size:22px;
+  font-family:'Epilogue',sans-serif;font-weight:600;font-style:italic;
+  color:var(--t1);text-decoration:none;
+  padding:16px 0;border-bottom:1px solid var(--bdr);
+}
+.mob-menu a:last-child{border-bottom:none}
+.mob-menu a.mob-cta{color:var(--vi-t)}
+@media(max-width:760px){.nav-links{display:none}.hbg{display:flex}}
+
+/* LAYOUT */
+.wrap{max-width:1160px;margin:0 auto;padding:0 5vw}
+section{padding:80px 0;border-bottom:1px solid var(--bdr);position:relative}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .44s ease,transform .44s ease}
+.rv.in{opacity:1;transform:none}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--vi);border-radius:2px}
+
+/* ===== HERO ===== */
+.hero{
+  padding:72px 5vw 64px;
+  max-width:1160px;margin:0 auto;
+  border-bottom:1px solid var(--bdr);
+}
+
+/* Pipeline Board — the hero interactive */
+.pipe-board{
+  width:100%;
+  background:#0f1320;
+  border:1px solid rgba(124,111,247,0.28);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:52px;
+  user-select:none;
+  box-shadow:0 0 0 1px rgba(124,111,247,0.08),
+             0 8px 40px rgba(0,0,0,0.5),
+             0 0 60px rgba(124,111,247,0.06);
+  position:relative;
+}
+
+.pipe-header{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 20px;
+  border-bottom:1px solid rgba(124,111,247,0.15);
+  background:rgba(124,111,247,0.08);
+}
+.pipe-dots{display:flex;gap:5px;flex-shrink:0}
+.pipe-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pipe-dot.vi{background:var(--vi);box-shadow:0 0 6px var(--vi)}
+.pipe-dot.am{background:var(--am);opacity:.6}
+.pipe-dot.gn{background:var(--grn);opacity:.6}
+.pipe-header-right{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+.pipe-label{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,0.75);font-weight:500;
+}
+.pipe-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.06em;padding:2px 9px;border-radius:100px;
+  background:rgba(124,111,247,0.15);border:1px solid rgba(124,111,247,0.3);
+  color:var(--vi-t);
+}
+.pipe-chip::before{content:'◉';font-size:7px;color:var(--vi)}
+
+.pipe-track{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:rgba(124,111,247,0.1);
+}
+@media(max-width:680px){
+  .pipe-track{grid-template-columns:repeat(2,1fr)}
+}
+
+.pipe-col{
+  background:#0d1019;
+  padding:16px;
+}
+
+.pipe-col-head{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pipe-count{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:4px;
+  padding:1px 6px;font-size:9px;
+  color:rgba(255,255,255,0.35);
+}
+
+/* candidate card */
+.cand-card{
+  background:#161b2a;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:border-color .15s,background .15s,transform .12s;
+  position:relative;
+}
+.cand-card:hover{
+  border-color:rgba(124,111,247,.45);
+  background:#1b2034;
+  transform:translateY(-1px);
+}
+.cand-card.active{
+  border-color:var(--vi);
+  background:rgba(124,111,247,.08);
+}
+.cand-card.done{
+  border-color:rgba(62,207,142,.35);
+  background:rgba(62,207,142,.05);
+}
+.cand-name{
+  font-size:12px;font-weight:600;color:var(--t1);
+  margin-bottom:3px;
+}
+.cand-role{font-size:10.5px;color:var(--t2);margin-bottom:8px}
+.cand-tags{display:flex;flex-wrap:wrap;gap:4px}
+.ctag{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  padding:2px 6px;border-radius:3px;
+  border:1px solid var(--bdr);color:var(--t3);letter-spacing:.04em;
+}
+.ctag.vi{border-color:rgba(124,111,247,.3);color:var(--vi-t);background:var(--vi-dim)}
+.ctag.gn{border-color:rgba(62,207,142,.3);color:var(--grn);background:var(--grn-dim)}
+.ctag.am{border-color:rgba(240,169,74,.3);color:var(--am-t);background:var(--am-dim)}
+
+.cand-score{
+  position:absolute;top:10px;right:10px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--vi-t);font-weight:500;
+}
+
+/* Nova badge on card */
+.nova-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  letter-spacing:.06em;padding:2px 7px;border-radius:100px;
+  background:var(--vi-dim);border:1px solid rgba(124,111,247,.25);
+  color:var(--vi-t);margin-top:6px;
+}
+.nova-badge::before{content:'✦';font-size:7px}
+
+/* time compression indicator */
+.time-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;
+  border-top:1px solid rgba(124,111,247,0.12);
+  background:rgba(124,111,247,0.05);
+}
+.time-before,.time-after{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;
+}
+.time-before{color:rgba(255,255,255,0.25);text-decoration:line-through}
+.time-arrow{color:rgba(255,255,255,0.2);font-size:10px;flex:1;text-align:center}
+.time-after{color:var(--grn);font-weight:500}
+.time-label{font-size:9px;color:rgba(255,255,255,0.25);margin-top:1px}
+
+/* instruction hint */
+.pipe-hint{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.08em;
+  text-align:center;padding:10px 20px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  background:rgba(0,0,0,0.2);
+  color:rgba(255,255,255,0.3);
+  transition:color .3s;
+}
+.pipe-hint.pulsing{
+  animation:hint-pulse 2s ease-in-out 3;
+}
+.pipe-hint .key{color:var(--vi-t);font-weight:500}
+@keyframes hint-pulse{
+  0%,100%{color:rgba(255,255,255,0.3)}
+  50%{color:rgba(176,169,251,0.8)}
+}
+
+/* progress bar inside track */
+.col-progress{
+  height:2px;background:var(--bg4);border-radius:1px;
+  margin-bottom:12px;overflow:hidden;
+}
+.col-progress-fill{
+  height:100%;border-radius:1px;
+  transition:width .6s ease;
+}
+
+/* ===== HERO TEXT ===== */
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t3);
+  margin-bottom:18px;
+}
+.hero-kicker-bar{width:22px;height:1px;background:var(--vi)}
+.hero-h{
+  font-family:'Epilogue',sans-serif;
+  font-size:clamp(38px,5.8vw,72px);
+  font-weight:800;line-height:.96;
+  letter-spacing:-.03em;color:var(--t1);
+  margin-bottom:18px;
+}
+.hero-h .vi{color:var(--vi2)}
+.hero-h .it{font-style:italic;font-weight:300}
+
+.hero-grid{
+  display:grid;grid-template-columns:1fr 320px;gap:48px;align-items:end;
+  margin-top:36px;
+}
+@media(max-width:800px){.hero-grid{grid-template-columns:1fr}}
+
+.hero-desc{
+  font-size:14.5px;color:var(--t2);line-height:1.75;max-width:520px;
+}
+.hero-desc strong{color:var(--t1);font-weight:500}
+
+.hero-actions{display:flex;flex-direction:column;gap:14px}
+.hero-links{display:flex;gap:8px;flex-wrap:wrap}
+.btn-vi{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--vi);color:#fff;
+  padding:9px 22px;border-radius:6px;
+  font-size:13px;font-weight:600;text-decoration:none;
+  transition:opacity .15s;
+}
+.btn-vi:hover{opacity:.82}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;color:var(--t2);
+  border:1px solid var(--bdr);
+  padding:8px 18px;border-radius:6px;
+  font-size:13px;font-weight:500;text-decoration:none;
+  transition:all .15s;
+}
+.btn-ghost:hover{border-color:var(--bmd);color:var(--t1)}
+.hero-nav{
+  display:flex;gap:6px;flex-direction:column;
+  border-left:1px solid var(--bdr);padding-left:24px;
+}
+.hnl{
+  font-size:12px;color:var(--t3);text-decoration:none;
+  transition:color .12s;letter-spacing:.01em;
+  display:flex;align-items:center;gap:8px;
+  padding:3px 0;
+}
+.hnl::before{content:'';width:6px;height:1px;background:var(--bdr);flex-shrink:0;transition:width .15s,background .15s}
+.hnl:hover{color:var(--vi-t)}
+.hnl:hover::before{width:14px;background:var(--vi)}
+
+/* ===== SECTION HEADERS ===== */
+.sec-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--vi);margin-bottom:10px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.sec-eyebrow::before{content:'';width:18px;height:1px;background:var(--vi)}
+.sec-h{
+  font-family:'Epilogue',sans-serif;
+  font-size:clamp(26px,3.4vw,40px);
+  font-weight:700;line-height:1.08;
+  letter-spacing:-.02em;color:var(--t1);
+  margin-bottom:14px;
+}
+.sec-sub{
+  font-size:14px;color:var(--t2);max-width:560px;line-height:1.75;
+}
+
+/* ===== POSITIONING SECTION ===== */
+.pos-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  border:1px solid var(--bdr);border-radius:12px;overflow:hidden;
+  margin-top:40px;
+}
+@media(max-width:720px){.pos-grid{grid-template-columns:1fr}}
+.pos-cell{
+  padding:32px 28px;background:var(--bg2);
+  border-bottom:1px solid var(--bdr);
+}
+.pos-cell:nth-child(odd){border-right:1px solid var(--bdr)}
+@media(max-width:720px){.pos-cell:nth-child(odd){border-right:none}}
+.pos-cell-label{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.pos-cell-label .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.dot-red{background:var(--red)}
+.dot-grn{background:var(--grn)}
+.dot-am{background:var(--am)}
+.dot-vi{background:var(--vi)}
+.pos-cell-h{
+  font-family:'Epilogue',sans-serif;font-size:16px;font-weight:700;
+  color:var(--t1);margin-bottom:10px;line-height:1.3;
+}
+.pos-cell-p{font-size:13px;color:var(--t2);line-height:1.7}
+.pos-cell-p strong{color:var(--t1);font-weight:500}
+
+/* full width cell */
+.pos-cell.full{
+  grid-column:1/-1;
+  border-right:none;
+}
+
+/* contrast table */
+.contrast-table{
+  width:100%;border-collapse:collapse;margin-top:36px;
+  border:1px solid var(--bdr);border-radius:10px;overflow:hidden;
+}
+.contrast-table thead th{
+  text-align:left;padding:14px 20px;
+  background:var(--bg3);
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--t3);
+  border-bottom:1px solid var(--bdr);
+}
+.contrast-table tbody td{
+  padding:14px 20px;font-size:13px;color:var(--t2);
+  border-bottom:1px solid var(--bdr);vertical-align:top;
+  line-height:1.6;
+}
+.contrast-table tbody tr:last-child td{border-bottom:none}
+.contrast-table .col-them{color:var(--t3)}
+.contrast-table .col-nova{color:var(--vi-t);font-weight:500}
+.contrast-table .col-angle{color:var(--am-t)}
+.contrast-table .col-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--t3);letter-spacing:.06em;
+}
+
+/* ===== GTM SECTION ===== */
+.gtm-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  margin-top:40px;
+}
+@media(max-width:880px){.gtm-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.gtm-grid{grid-template-columns:1fr}}
+
+.gtm-card{
+  background:var(--bg2);border:1px solid var(--bdr);
+  border-radius:10px;padding:24px;
+  transition:border-color .15s;
+}
+.gtm-card:hover{border-color:rgba(124,111,247,.25)}
+.gtm-num{
+  font-family:'Epilogue',sans-serif;font-size:42px;font-weight:800;
+  color:var(--bg4);line-height:1;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--vi),transparent 90%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.gtm-card-h{
+  font-family:'Epilogue',sans-serif;font-size:15px;font-weight:700;
+  color:var(--t1);margin-bottom:8px;line-height:1.3;
+}
+.gtm-card-p{font-size:12.5px;color:var(--t2);line-height:1.65}
+
+.gtm-icp{
+  margin-top:48px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+@media(max-width:720px){.gtm-icp{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.gtm-icp{grid-template-columns:1fr}}
+.icp-card{
+  background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;
+  padding:20px;
+}
+.icp-seg{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--vi-t);
+  margin-bottom:10px;
+}
+.icp-name{
+  font-family:'Epilogue',sans-serif;font-size:14px;font-weight:700;
+  color:var(--t1);margin-bottom:6px;
+}
+.icp-p{font-size:12px;color:var(--t2);line-height:1.6}
+.icp-pain{
+  margin-top:10px;font-size:11.5px;color:var(--am-t);
+  font-style:italic;
+}
+
+/* ===== MESSAGING SECTION ===== */
+.msg-stack{
+  margin-top:40px;display:flex;flex-direction:column;gap:2px;
+  border:1px solid var(--bdr);border-radius:12px;overflow:hidden;
+}
+.msg-row{
+  display:grid;grid-template-columns:200px 1fr;
+  border-bottom:1px solid var(--bdr);background:var(--bg2);
+}
+.msg-row:last-child{border-bottom:none}
+.msg-row-label{
+  padding:24px 24px;
+  background:var(--bg3);border-right:1px solid var(--bdr);
+  display:flex;flex-direction:column;justify-content:center;gap:4px;
+}
+.msg-row-type{
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--t3);
+}
+.msg-row-who{font-size:12.5px;font-weight:600;color:var(--t1)}
+.msg-row-body{padding:24px 28px}
+.msg-headline{
+  font-family:'Epilogue',sans-serif;font-size:15px;font-weight:700;
+  color:var(--t1);margin-bottom:6px;line-height:1.35;
+}
+.msg-sub{font-size:13px;color:var(--t2);line-height:1.65}
+.msg-proof{
+  margin-top:8px;font-size:11.5px;color:var(--vi-t);
+  font-family:'JetBrains Mono',monospace;letter-spacing:.04em;
+}
+@media(max-width:680px){
+  .msg-row{grid-template-columns:1fr}
+  .msg-row-label{border-right:none;border-bottom:1px solid var(--bdr);padding:16px 20px}
+  .msg-row-body{padding:16px 20px}
+}
+
+/* copy vault */
+.copy-vault{
+  margin-top:48px;
+  background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;
+  overflow:hidden;
+}
+.copy-vault-head{
+  padding:14px 20px;background:var(--bg3);border-bottom:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--t3);
+}
+.copy-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--bdr);
+  overflow-x:auto;
+}
+.copy-tab{
+  padding:10px 20px;font-size:12px;font-weight:500;color:var(--t3);
+  cursor:pointer;transition:all .12s;white-space:nowrap;
+  border-bottom:2px solid transparent;background:none;border-top:none;
+  border-left:none;border-right:none;
+  font-family:'Inter',sans-serif;
+}
+.copy-tab:hover{color:var(--t2)}
+.copy-tab.active{color:var(--vi-t);border-bottom-color:var(--vi)}
+.copy-pane{display:none;padding:24px 24px}
+.copy-pane.active{display:block}
+.copy-pane p{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:16px}
+.copy-pane p:last-child{margin-bottom:0}
+.copy-pane strong{color:var(--t1);font-weight:500}
+
+/* ===== ENABLEMENT ===== */
+.enable-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;
+}
+@media(max-width:720px){.enable-grid{grid-template-columns:1fr}}
+
+.enable-card{
+  background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;
+  overflow:hidden;
+}
+.enable-card-head{
+  padding:16px 20px;background:var(--bg3);
+  border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;gap:10px;
+}
+.enable-card-icon{
+  width:32px;height:32px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.icon-vi{background:var(--vi-dim)}
+.icon-am{background:var(--am-dim)}
+.enable-card-title{font-size:13px;font-weight:600;color:var(--t1)}
+.enable-card-sub{font-size:11px;color:var(--t3)}
+.enable-card-body{padding:20px}
+.enable-list{display:flex;flex-direction:column;gap:10px}
+.enable-item{
+  display:flex;gap:10px;align-items:flex-start;
+  font-size:12.5px;color:var(--t2);line-height:1.55;
+}
+.enable-item::before{
+  content:'';width:4px;height:4px;border-radius:50%;
+  background:var(--vi);flex-shrink:0;margin-top:6px;
+}
+
+/* ===== OTHER WORK ===== */
+.work-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:40px;
+}
+@media(max-width:880px){.work-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.work-grid{grid-template-columns:1fr}}
+
+.work-card{
+  background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;
+  padding:22px;text-decoration:none;color:inherit;
+  transition:border-color .15s,background .15s;display:block;
+  position:relative;overflow:hidden;
+}
+.work-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--vi),var(--am));
+  opacity:0;transition:opacity .2s;
+}
+.work-card:hover{border-color:rgba(124,111,247,.3);background:var(--bg3)}
+.work-card:hover::before{opacity:1}
+.work-tag{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--vi-t);
+  margin-bottom:12px;
+}
+.work-name{
+  font-family:'Epilogue',sans-serif;font-size:16px;font-weight:700;
+  color:var(--t1);margin-bottom:6px;line-height:1.25;
+}
+.work-desc{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:14px}
+.work-link{
+  font-size:11px;color:var(--vi-t);
+  display:inline-flex;align-items:center;gap:5px;
+}
+.work-link::after{content:'→'}
+
+/* ===== FOOTER ===== */
+.footer{
+  padding:40px 0;
+  max-width:1160px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+  padding-left:5vw;padding-right:5vw;
+}
+.footer-name{
+  font-family:'Epilogue',sans-serif;font-size:13px;font-weight:600;color:var(--t2);
+}
+.footer-links{display:flex;gap:6px;flex-wrap:wrap}
+.fl{
+  font-size:11.5px;color:var(--t3);text-decoration:none;
+  padding:4px 12px;border:1px solid var(--bdr);border-radius:100px;
+  transition:all .13s;display:inline-flex;align-items:center;gap:5px;
+}
+.fl:hover{border-color:var(--bmd);color:var(--t2)}
+
+/* generic utility */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:9.5px;
+  letter-spacing:.06em;padding:3px 10px;border-radius:100px;
+  border:1px solid;
+}
+.pill-vi{border-color:rgba(124,111,247,.3);color:var(--vi-t);background:var(--vi-dim)}
+.pill-gn{border-color:rgba(62,207,142,.3);color:var(--grn);background:var(--grn-dim)}
+.pill-am{border-color:rgba(240,169,74,.3);color:var(--am-t);background:var(--am-dim)}
+.pill-rd{border-color:rgba(224,88,88,.3);color:var(--red);background:var(--red-dim)}
+
+/* Ghost cursor click ripple */
+@keyframes ghost-click{
+  0%{transform:scale(1);opacity:1}
+  60%{transform:scale(1.8);opacity:0.4}
+  100%{transform:scale(2.2);opacity:0}
+}
+.ghost-clicking{animation:ghost-click .4s ease-out forwards}
+
+/* Card pulse to draw attention */
+@keyframes card-pulse{
+  0%,100%{box-shadow:none}
+  50%{box-shadow:0 0 0 3px rgba(124,111,247,0.5)}
+}
+.card-pulsing{animation:card-pulse .7s ease-in-out 2}
+
+</style>
+</head>
+<body>
+
+<div id="rbar"></div>
+
+<nav class="nav">
+  <div class="nav-i">
+    <div class="nav-brand">
+      <span>bhanu kumar</span>
+      <span class="sep">/</span>
+      <span class="hi">peoplebox.ai</span>
+    </div>
+    <div class="nav-links">
+      <a href="#positioning" class="nl">Positioning</a>
+      <a href="#gtm" class="nl">GTM</a>
+      <a href="#messaging" class="nl">Messaging</a>
+      <a href="#enablement" class="nl">Enablement</a>
+      <a href="#work" class="nl">Other Work</a>
+      <a href="https://drive.google.com/file/d/1eqT1ynEgC25uFw84BBK-fSl3R5fnuQRW/view" target="_blank" class="nl cta">Resume</a>
+    </div>
+    <button class="hbg" id="hbg" aria-label="menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mob-menu" id="mob-menu">
+  <a href="#positioning" onclick="closeMob()">Positioning</a>
+  <a href="#gtm" onclick="closeMob()">GTM</a>
+  <a href="#messaging" onclick="closeMob()">Messaging</a>
+  <a href="#enablement" onclick="closeMob()">Enablement</a>
+  <a href="#work" onclick="closeMob()">Other Work</a>
+  <a href="https://drive.google.com/file/d/1eqT1ynEgC25uFw84BBK-fSl3R5fnuQRW/view" target="_blank" class="mob-cta">Resume</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+
+  <!-- Pipeline interactive -->
+  <div class="pipe-board rv" id="hero-board">
+    <!-- Ghost cursor for auto-demo -->
+    <div id="ghost-cursor" style="
+      position:absolute;width:22px;height:22px;border-radius:50%;
+      background:rgba(124,111,247,0.25);border:2px solid rgba(124,111,247,0.7);
+      pointer-events:none;z-index:50;opacity:0;
+      transition:opacity .3s, top .45s cubic-bezier(.4,0,.2,1), left .45s cubic-bezier(.4,0,.2,1), transform .12s;
+      box-shadow:0 0 12px rgba(124,111,247,0.5);
+    "></div>
+    <div class="pipe-header">
+      <div class="pipe-dots">
+        <div class="pipe-dot vi"></div>
+        <div class="pipe-dot am"></div>
+        <div class="pipe-dot gn"></div>
+      </div>
+      <div class="pipe-header-right">
+        <span class="pipe-label">Nova · Active Pipeline</span>
+        <span class="pipe-chip">Customer Support Lead · BrightDesk</span>
+      </div>
+    </div>
+    <div class="pipe-track" id="pipe-track">
+
+      <div class="pipe-col" id="col-0" data-col="0">
+        <div class="pipe-col-head">
+          Applied <span class="pipe-count" id="cnt-0">3</span>
+        </div>
+        <div class="col-progress"><div class="col-progress-fill" style="width:100%;background:var(--bmd)"></div></div>
+
+        <div class="cand-card" id="card-0" onclick="advanceCard('card-0')" data-col="0">
+          <div class="cand-score">—</div>
+          <div class="cand-name">Priya Nambiar</div>
+          <div class="cand-role">Ops Lead · 4 yrs</div>
+          <div class="cand-tags">
+            <span class="ctag">Resume uploaded</span>
+          </div>
+        </div>
+        <div class="cand-card" id="card-1" onclick="advanceCard('card-1')" data-col="0">
+          <div class="cand-score">—</div>
+          <div class="cand-name">Ritesh Kaul</div>
+          <div class="cand-role">CX Specialist · 2 yrs</div>
+          <div class="cand-tags">
+            <span class="ctag">Resume uploaded</span>
+          </div>
+        </div>
+        <div class="cand-card" id="card-2" onclick="advanceCard('card-2')" data-col="0">
+          <div class="cand-score">—</div>
+          <div class="cand-name">Simran Ahuja</div>
+          <div class="cand-role">BPO Manager · 6 yrs</div>
+          <div class="cand-tags">
+            <span class="ctag">Resume uploaded</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-col" id="col-1" data-col="1">
+        <div class="pipe-col-head">
+          Nova Screened <span class="pipe-count" id="cnt-1">0</span>
+        </div>
+        <div class="col-progress"><div class="col-progress-fill" id="prog-1" style="width:0%;background:var(--vi)"></div></div>
+        <div id="slot-1"></div>
+      </div>
+
+      <div class="pipe-col" id="col-2" data-col="2">
+        <div class="pipe-col-head">
+          Nova Interviewed <span class="pipe-count" id="cnt-2">0</span>
+        </div>
+        <div class="col-progress"><div class="col-progress-fill" id="prog-2" style="width:0%;background:var(--am)"></div></div>
+        <div id="slot-2"></div>
+      </div>
+
+      <div class="pipe-col" id="col-3" data-col="3">
+        <div class="pipe-col-head">
+          Shortlisted <span class="pipe-count" id="cnt-3">0</span>
+        </div>
+        <div class="col-progress"><div class="col-progress-fill" id="prog-3" style="width:0%;background:var(--grn)"></div></div>
+        <div id="slot-3"></div>
+      </div>
+
+    </div>
+    <div class="time-bar">
+      <div>
+        <div class="time-before">4–6 weeks</div>
+        <div class="time-label">traditional pipeline</div>
+      </div>
+      <div class="time-arrow">⟶</div>
+      <div>
+        <div class="time-after" id="time-display">click any card to start</div>
+        <div class="time-label" id="time-sublabel"></div>
+      </div>
+    </div>
+    <div class="pipe-hint"><span class="key">Click</span> any candidate card to move through the Nova pipeline</div>
+  </div>
+
+  <div class="hero-kicker rv">
+    <span class="hero-kicker-bar"></span>
+    Product Marketing
+  </div>
+  <h1 class="hero-h rv">
+    The hiring stack<br>
+    <span class="vi">finally</span> <span class="it">caught up.</span><br>
+    Nova's story isn't.
+  </h1>
+
+  <div class="hero-grid rv">
+    <div>
+      <p class="hero-desc">
+        Peoplebox.ai built something genuinely different: an AI that <strong>runs the interview, not just the schedule.</strong> This is what that narrative looks like when it's built for the right buyer, in the right market, with the right proof points behind it.
+      </p>
+      <div class="hero-links" style="margin-top:24px">
+        <a href="#positioning" class="btn-vi">Read the work</a>
+        <a href="https://www.linkedin.com/in/bhanuexcalibur/" target="_blank" class="btn-ghost">LinkedIn</a>
+        <a href="https://drive.google.com/file/d/1eqT1ynEgC25uFw84BBK-fSl3R5fnuQRW/view" target="_blank" class="btn-ghost">Resume</a>
+      </div>
+    </div>
+    <nav class="hero-nav rv">
+      <a href="#positioning" class="hnl">Positioning Audit</a>
+      <a href="#gtm" class="hnl">GTM Brief</a>
+      <a href="#messaging" class="hnl">Messaging Framework</a>
+      <a href="#enablement" class="hnl">Sales Enablement</a>
+      <a href="#work" class="hnl">Other Work</a>
+    </nav>
+  </div>
+
+</div>
+
+<!-- POSITIONING -->
+<section id="positioning">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-eyebrow">01 / Positioning Audit</div>
+      <h2 class="sec-h">Where Peoplebox sits,<br>where it should.</h2>
+      <p class="sec-sub">Nova competes in a category that's being redrawn. The tools buyers compare it to were built for a different problem. That gap is the opportunity.</p>
+    </div>
+
+    <div class="pos-grid rv">
+      <div class="pos-cell">
+        <div class="pos-cell-label"><span class="dot dot-red"></span> The category it gets lumped into</div>
+        <div class="pos-cell-h">"AI video interviewing"</div>
+        <p class="pos-cell-p">HireVue and Spark Hire own this frame. It positions Nova as a <strong>recording tool</strong> with smarter playback. Buyers default to price comparisons and "do we really need this" conversations. Wrong shelf entirely.</p>
+      </div>
+      <div class="pos-cell">
+        <div class="pos-cell-label"><span class="dot dot-grn"></span> The category it actually competes in</div>
+        <div class="pos-cell-h">"AI that runs your first-round hiring"</div>
+        <p class="pos-cell-p">Nova doesn't record an interview: it <strong>conducts one.</strong> It follows up, scores, probes edge cases in coding rounds, and delivers a decision-ready report. That's closer to replacing a recruiter's first 40 hours than replacing a video camera.</p>
+      </div>
+      <div class="pos-cell">
+        <div class="pos-cell-label"><span class="dot dot-am"></span> The narrative gap</div>
+        <div class="pos-cell-h">Built for volume, not just speed</div>
+        <p class="pos-cell-p">Most competitors anchor on speed: "hire faster." That resonates with TA teams but barely moves VPs of Ops or CFOs. Nova's real value is <strong>cost per qualified hire at scale</strong>, a frame that unlocks budget conversations outside the HR silo.</p>
+      </div>
+      <div class="pos-cell">
+        <div class="pos-cell-label"><span class="dot dot-vi"></span> The positioning thesis</div>
+        <div class="pos-cell-h">Nova is the interview, not the tool around it</div>
+        <p class="pos-cell-p">Competitors automate the logistics of interviewing. Nova automates the interview itself. This distinction matters enormously to high-volume buyers who've already tried scheduling tools and still have 300 unreviewed applications on Monday morning.</p>
+      </div>
+    </div>
+
+    <div class="sec-divider rv" style="margin-top:48px"></div>
+    <h3 class="sec-h rv" style="font-size:clamp(20px,2.4vw,28px);margin-bottom:28px">Competitive contrast: where Nova wins the messaging battle</h3>
+
+    <div class="rv" style="overflow-x:auto">
+      <table class="contrast-table">
+        <thead>
+          <tr>
+            <th>Competitor</th>
+            <th>Their Claim</th>
+            <th>Nova's Counter-Angle</th>
+            <th>PMM Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-label">HireVue</td>
+            <td class="col-them">"AI-powered video assessments" for enterprise.</td>
+            <td class="col-nova">HireVue scores recorded answers. Nova asks the next question. The difference is a real conversation vs. a completed form.</td>
+            <td class="col-angle">Emphasize conversational intelligence: follow-up questions, adaptive probing, coding round depth.</td>
+          </tr>
+          <tr>
+            <td class="col-label">Paradox / Olivia</td>
+            <td class="col-them">Conversational AI for scheduling, FAQ, and candidate engagement.</td>
+            <td class="col-nova">Paradox coordinates the interview. Nova is the interview. One removes scheduling friction; the other removes the interview panel from round one entirely.</td>
+            <td class="col-angle">Battle card positioning: "Olivia handles logistics. Nova handles evaluation."</td>
+          </tr>
+          <tr>
+            <td class="col-label">Ashby / Greenhouse</td>
+            <td class="col-them">Modern ATS with embedded AI screening.</td>
+            <td class="col-nova">ATS AI reads the resume. Nova talks to the candidate. Peoplebox integrates with both and adds the layer they can't natively provide.</td>
+            <td class="col-angle">Partner framing with ATS players; position Nova as an interview layer, not an ATS replacement.</td>
+          </tr>
+          <tr>
+            <td class="col-label">TestGorilla / Vervoe</td>
+            <td class="col-them">Skills assessments, job simulations, anti-cheating.</td>
+            <td class="col-nova">Tests measure a snapshot. Nova's live coding round challenges decisions in real time: write code, Nova questions the logic, candidate defends it.</td>
+            <td class="col-angle">Lead with the coding round differentiator for technical role use cases.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- GTM BRIEF -->
+<section id="gtm">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-eyebrow">02 / GTM Brief</div>
+      <h2 class="sec-h">Two products,<br>two distinct motions.</h2>
+      <p class="sec-sub">Nova and the talent management platform serve overlapping companies but very different buyers. Conflating them in GTM dilutes both. Here's how I'd run them separately while keeping the story coherent.</p>
+    </div>
+
+    <div class="gtm-grid rv">
+      <div class="gtm-card">
+        <div class="gtm-num">01</div>
+        <div class="gtm-card-h">Nova: Volume-hiring teams as the wedge</div>
+        <p class="gtm-card-p">The buyers with the sharpest pain are high-turnover industries: logistics, BPO, retail ops, SaaS support. They're screening 200+ candidates per role, losing good people to ghosting, and haven't found a tool that actually interviews. Start here. Land, prove time-to-hire compression, expand upward.</p>
+      </div>
+      <div class="gtm-card">
+        <div class="gtm-num">02</div>
+        <div class="gtm-card-h">Talent Platform: Expand into existing accounts</div>
+        <p class="gtm-card-p">Once Nova lands in an org, the talent management platform becomes a natural second conversation. The data Nova generates (candidate quality, funnel health, time-to-shortlist) creates continuity into performance reviews and OKR tracking. The pitch: "same platform that hired them, now helps you grow them."</p>
+      </div>
+      <div class="gtm-card">
+        <div class="gtm-num">03</div>
+        <div class="gtm-card-h">Middle East: Localization before expansion</div>
+        <p class="gtm-card-p">The JD mentions US and ME. These are not the same motion. Middle East GTM needs compliance-first messaging (deepfake detection, structured proctoring, bias-free frameworks), local case studies, and partnership with regional HR tech communities before any broad push. Building brand in ME without credibility anchors first is expensive.</p>
+      </div>
+    </div>
+
+    <div class="rv" style="margin-top:48px">
+      <h3 class="sec-h" style="font-size:clamp(18px,2.2vw,26px);margin-bottom:8px">ICP definition: who gets the most value from Nova today</h3>
+      <p class="sec-sub" style="margin-bottom:28px">Not every company Nova could sell to is worth chasing. These three segments have the right combination of volume, urgency, and budget to close fast.</p>
+    </div>
+
+    <div class="gtm-icp rv">
+      <div class="icp-card">
+        <div class="icp-seg">Segment A</div>
+        <div class="icp-name">High-volume, high-turnover ops teams</div>
+        <p class="icp-p">Logistics, BPO, retail, SaaS support. Hiring 50+ people per quarter. Recruiter bandwidth is the binding constraint, not budget.</p>
+        <p class="icp-pain">Pain: "We're screening the same kind of candidate 400 times and we still miss good ones."</p>
+      </div>
+      <div class="icp-card">
+        <div class="icp-seg">Segment B</div>
+        <div class="icp-name">Growth-stage SaaS scaling into new markets</div>
+        <p class="icp-p">50–500 employees. Hiring across functions simultaneously. TA team is 1–3 people trying to serve 12 open reqs.</p>
+        <p class="icp-pain">Pain: "Every req is a firefight. We can't screen fast enough and panels are burned out."</p>
+      </div>
+      <div class="icp-card">
+        <div class="icp-seg">Segment C</div>
+        <div class="icp-name">Tech hiring managers: first-round coding</div>
+        <p class="icp-p">Engineering teams replacing take-home assignments or manual technical screens. The live coding round with AI probing is the hook here, not the HR workflow.</p>
+        <p class="icp-pain">Pain: "We give candidates a 3-hour assignment. Half ghost us. The other half are coached."</p>
+      </div>
+    </div>
+
+    <div class="rv" style="margin-top:48px;padding:28px;background:var(--bg2);border:1px solid var(--bdr);border-radius:12px">
+      <div class="sec-eyebrow" style="margin-bottom:12px">Launch hypothesis</div>
+      <p style="font-size:14px;color:var(--t2);line-height:1.75;max-width:680px">
+        Nova's live coding round launched in December 2025. That's a category-creating moment worth its own GTM push. The angle: not "AI coding assessment" but <strong style="color:var(--t1)">"the first interview where the AI actually challenges your code, not just tests it."</strong> A dedicated landing page, two to three customer stories from technical hiring managers, and a short LinkedIn content series from the founders would give this the surface area it deserves.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- MESSAGING -->
+<section id="messaging">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-eyebrow">03 / Messaging Framework</div>
+      <h2 class="sec-h">Same product.<br>Three conversations.</h2>
+      <p class="sec-sub">The value Nova delivers looks different depending on who's buying it. These three message sets are designed to be independently coherent, not a diluted version of one master message.</p>
+    </div>
+
+    <div class="msg-stack rv">
+      <div class="msg-row">
+        <div class="msg-row-label">
+          <div class="msg-row-type">Buyer A</div>
+          <div class="msg-row-who">VP Talent / TA Lead</div>
+        </div>
+        <div class="msg-row-body">
+          <div class="msg-headline">Your interview panel is spending 80% of their time on candidates you'll reject. Nova fixes that before they even meet them.</div>
+          <p class="msg-sub">Nova screens, interviews, and scores candidates end-to-end. By the time your team sees a name, it's already passed a structured first round with real follow-up questions, not a multiple-choice form. Time-to-first-shortlist drops from weeks to under 48 hours.</p>
+          <div class="msg-proof">↳ Proof point: Most customers reduced time-to-first-interview report from 4–5 weeks to under 48 hours.</div>
+        </div>
+      </div>
+      <div class="msg-row">
+        <div class="msg-row-label">
+          <div class="msg-row-type">Buyer B</div>
+          <div class="msg-row-who">CFO / VP Operations</div>
+        </div>
+        <div class="msg-row-body">
+          <div class="msg-headline">Every unscreened resume that sits in your queue is a cost. Nova's not a recruiting tool; it's a cost-per-qualified-hire equation.</div>
+          <p class="msg-sub">At volume, the math is simple: manual screening costs recruiter hours at every stage. Nova compresses the top of the funnel without adding headcount. You get a higher-quality shortlist at a lower cost of production, especially as hiring volumes spike.</p>
+          <div class="msg-proof">↳ Proof point: Nova reduces recruiter screening time by up to 90% (Peoplebox.ai product data).</div>
+        </div>
+      </div>
+      <div class="msg-row">
+        <div class="msg-row-label">
+          <div class="msg-row-type">Buyer C</div>
+          <div class="msg-row-who">Hiring Manager / Eng Lead</div>
+        </div>
+        <div class="msg-row-body">
+          <div class="msg-headline">Nova's coding round doesn't just run the test. It challenges how candidates think: live, in conversation, with follow-up questions.</div>
+          <p class="msg-sub">Traditional technical screens either take-home (easy to cheat, painful to review) or synchronous (panel bandwidth is finite). Nova runs a live conversational coding round: candidates write real code, Nova probes their logic and edge cases, and you get a structured report. No prep required from your side.</p>
+          <div class="msg-proof">↳ Proof point: Launched Dec 2025, replacing three separate hiring stages with one continuous automated flow.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy-vault rv" style="margin-top:48px">
+      <div class="copy-vault-head">Copy vault: ready-to-use executions by channel</div>
+      <div class="copy-tabs">
+        <button class="copy-tab active" onclick="switchTab(this,'pane-lp')">Landing Page</button>
+        <button class="copy-tab" onclick="switchTab(this,'pane-email')">Cold Email</button>
+        <button class="copy-tab" onclick="switchTab(this,'pane-linkedin')">LinkedIn Hook</button>
+        <button class="copy-tab" onclick="switchTab(this,'pane-objection')">Objection Handling</button>
+      </div>
+      <div class="copy-pane active" id="pane-lp">
+        <p><strong>Headline:</strong> Your best recruiter doesn't stop at 5pm. Nova doesn't either.</p>
+        <p><strong>Sub-headline:</strong> Nova screens resumes, conducts structured interviews, runs live coding rounds, and delivers decision-ready reports, all before your team starts their day. From 300 applicants to a shortlist in under 30 minutes.</p>
+        <p><strong>CTA:</strong> See Nova interview a real candidate</p>
+        <p><strong>Trust bar:</strong> 500+ companies · 4–5 week pipelines compressed to 48 hours · Works with Greenhouse, Lever, Workday</p>
+      </div>
+      <div class="copy-pane" id="pane-email">
+        <p><strong>Subject:</strong> Re: your Q1 hiring targets</p>
+        <p>Hi [Name], saw you're scaling [function] this quarter at [Company]. Most teams at your stage are stuck in the same loop: recruiter does 200 screens, 180 go nowhere, panel gets involved too early.</p>
+        <p>Nova runs the first-round interview instead. Not a chatbot, not a video form. An AI that asks follow-up questions, scores responses in real time, and hands your team a shortlist, not a pile of resumes. Most customers go from multi-week pipelines to a qualified shortlist in under 48 hours.</p>
+        <p>Worth 20 minutes to see it run a live interview? Happy to demo with a real job req from your team.</p>
+      </div>
+      <div class="copy-pane" id="pane-linkedin">
+        <p><strong>Hook for Nova content series:</strong></p>
+        <p>We ran an experiment. We gave Nova a job req for a Customer Support Lead and 300 applicants. 48 hours later, we had a shortlist of 12 with structured interview reports for each.</p>
+        <p>No recruiter. No scheduling. No ghosting. The traditional way would have taken 6 weeks and involved 4 people.</p>
+        <p>Here's what Nova actually asked the top candidate during the interview, and why the scoring held up when we reviewed it...</p>
+        <p><strong>Why it works:</strong> Shows the product in action, not the feature list. The "here's what it asked" angle creates curiosity and builds trust simultaneously.</p>
+      </div>
+      <div class="copy-pane" id="pane-objection">
+        <p><strong>Objection: "Candidates will feel uncomfortable talking to an AI."</strong></p>
+        <p>Flip it: candidates get an interview the same day they apply, at a time that works for them, with no scheduling friction. In early pilots, 87% said they felt more comfortable with Nova than with a recruiter. The candidates who complain about AI interviews are usually the ones who had a bad experience with a clunky video form, not a real conversation.</p>
+        <p><strong>Objection: "We already use HireVue / Greenhouse / [ATS]."</strong></p>
+        <p>Nova integrates with both. It's not a replacement for your ATS, it's the interview layer your ATS doesn't have. Your team keeps their existing stack; Nova adds the part where someone actually talks to the candidate.</p>
+        <p><strong>Objection: "We're not sure the scoring is reliable."</strong></p>
+        <p>Fair. Nova uses structured question frameworks and role-specific scoring rubrics, not black-box AI sentiment scoring. The report shows you the exact questions asked, the candidate's responses, and the rationale behind each score. Your team reviews it and makes the call: Nova just removes the 40 hours of work before that review.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ENABLEMENT -->
+<section id="enablement">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-eyebrow">04 / Sales Enablement</div>
+      <h2 class="sec-h">What the sales team<br>needs to win more deals.</h2>
+      <p class="sec-sub">Positioning and messaging only matter if the people selling the product can actually use them. These are the four pieces I'd build in the first 60 days.</p>
+    </div>
+
+    <div class="enable-grid rv">
+      <div class="enable-card">
+        <div class="enable-card-head">
+          <div class="enable-card-icon icon-vi">🃏</div>
+          <div>
+            <div class="enable-card-title">Nova Competitive Battle Card</div>
+            <div class="enable-card-sub">For reps in competitive deals</div>
+          </div>
+        </div>
+        <div class="enable-card-body">
+          <div class="enable-list">
+            <div class="enable-item">HireVue, Paradox, TestGorilla one-pagers with "they say / we say" structure for each objection pattern</div>
+            <div class="enable-item">One killer differentiator per competitor to anchor the rep's story, not a feature matrix</div>
+            <div class="enable-item">Specific call out for the live coding round vs. traditional take-home assessments, targeting eng hiring managers separately</div>
+            <div class="enable-item">Quote-ready stat bank: 48-hour pipeline compression, 90% recruiter time reduction, 87% candidate comfort metric</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="enable-card">
+        <div class="enable-card-head">
+          <div class="enable-card-icon icon-am">📄</div>
+          <div>
+            <div class="enable-card-title">Buyer-Specific One-Pagers</div>
+            <div class="enable-card-sub">TA Lead / CFO / Hiring Manager versions</div>
+          </div>
+        </div>
+        <div class="enable-card-body">
+          <div class="enable-list">
+            <div class="enable-item">Three separate one-pagers, each speaking to the buyer's actual metric: time-to-hire, cost-per-hire, interview quality and signal reliability</div>
+            <div class="enable-item">Each one designed to be shared by the champion internally, not just left as a sales leave-behind</div>
+            <div class="enable-item">Deliberately short: one page, three proof points, one clear next step. Built for sharing in a Slack message, not a folder.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="enable-card">
+        <div class="enable-card-head">
+          <div class="enable-card-icon icon-vi">🔁</div>
+          <div>
+            <div class="enable-card-title">Win / Loss Interview Program</div>
+            <div class="enable-card-sub">Quarterly insight engine</div>
+          </div>
+        </div>
+        <div class="enable-card-body">
+          <div class="enable-list">
+            <div class="enable-item">Structured discovery calls with 5 recent wins and 5 recent losses each quarter, looking for repeating patterns in the deal narrative</div>
+            <div class="enable-item">Specific focus: which objections are coming up most, which competitors are showing up late in deals, and which proof points are landing hardest</div>
+            <div class="enable-item">Output feeds directly into battle card updates and messaging refreshes, not a report that sits in a folder</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="enable-card">
+        <div class="enable-card-head">
+          <div class="enable-card-icon icon-am">🎯</div>
+          <div>
+            <div class="enable-card-title">Demo Narrative Framework</div>
+            <div class="enable-card-sub">Turning live demos into AHA moments</div>
+          </div>
+        </div>
+        <div class="enable-card-body">
+          <div class="enable-list">
+            <div class="enable-item">The product demo should start with a real pain: "You have 300 applications. Show me what happens in the next 30 minutes." Then let Nova do it live.</div>
+            <div class="enable-item">Three demo tracks: TA lead track (pipeline view), CFO track (cost model, time compression), Eng hiring manager track (live coding round walkthrough)</div>
+            <div class="enable-item">Train reps to resist the feature-tour trap: demo the outcome, not the settings panel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- OTHER WORK -->
+<section id="work">
+  <div class="wrap">
+    <div class="rv">
+      <div class="sec-eyebrow">05 / Other Work</div>
+      <h2 class="sec-h">Selected prior work.</h2>
+      <p class="sec-sub">Five projects chosen for how they connect: B2B SaaS positioning, enterprise GTM, and messaging frameworks for products with complex buyer landscapes.</p>
+    </div>
+
+    <div class="work-grid rv">
+      <a href="https://bhanuexcalibur.github.io/Continuous/" target="_blank" class="work-card">
+        <div class="work-tag">B2B SaaS · GTM</div>
+        <div class="work-name">Continuous</div>
+        <p class="work-desc">Positioning and GTM strategy for a dev-tooling product with multiple buyer personas and a long enterprise sales cycle.</p>
+        <div class="work-link">View project</div>
+      </a>
+      <a href="https://bhanuexcalibur.github.io/Veeva/" target="_blank" class="work-card">
+        <div class="work-tag">Enterprise SaaS · Positioning</div>
+        <div class="work-name">Veeva</div>
+        <p class="work-desc">Enterprise PMM work for a vertical SaaS with a complex multi-stakeholder selling motion across LoB buyers.</p>
+        <div class="work-link">View project</div>
+      </a>
+      <a href="https://bhanuexcalibur.github.io/smallcase/" target="_blank" class="work-card">
+        <div class="work-tag">Consumer-to-B2B · Messaging</div>
+        <div class="work-name">Smallcase</div>
+        <p class="work-desc">GTM messaging work bridging a consumer product into a B2B distribution model with new institutional buyers.</p>
+        <div class="work-link">View project</div>
+      </a>
+      <a href="https://bhanuexcalibur.github.io/Deltek/" target="_blank" class="work-card">
+        <div class="work-tag">Enterprise · Sales Enablement</div>
+        <div class="work-name">Deltek</div>
+        <p class="work-desc">Sales enablement and persona-specific messaging for a project management platform selling into professional services firms.</p>
+        <div class="work-link">View project</div>
+      </a>
+      <a href="https://bhanuexcalibur.github.io/CashFree/" target="_blank" class="work-card">
+        <div class="work-tag">Fintech · ICP & GTM</div>
+        <div class="work-name">Cashfree</div>
+        <p class="work-desc">ICP definition and GTM strategy for a payments API product with mid-market and enterprise tracks running in parallel.</p>
+        <div class="work-link">View project</div>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer">
+    <div class="footer-name">Bhanu Kumar · Product Marketing</div>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/bhanuexcalibur/" target="_blank" class="fl">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://drive.google.com/file/d/1eqT1ynEgC25uFw84BBK-fSl3R5fnuQRW/view" target="_blank" class="fl">Resume</a>
+      <a href="https://bhanuexcalibur.github.io" target="_blank" class="fl">Portfolio</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Reading bar
+const rbar = document.getElementById('rbar');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  rbar.style.width = pct + '%';
+}, {passive:true});
+
+// Mobile menu
+const hbg = document.getElementById('hbg');
+const mob = document.getElementById('mob-menu');
+hbg.addEventListener('click', () => {
+  hbg.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+function closeMob(){
+  hbg.classList.remove('open');
+  mob.classList.remove('open');
+}
+
+// Reveal on scroll
+const rvEls = document.querySelectorAll('.rv');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold:0.08, rootMargin:'0px 0px -32px 0px'});
+rvEls.forEach(el => obs.observe(el));
+
+// ===== AUTO-DEMO ghost cursor =====
+let userInteracted = false;
+let demoDone = false;
+
+// Detect any real user interaction with the board
+document.getElementById('hero-board').addEventListener('click', () => {
+  userInteracted = true;
+}, {once:true});
+document.getElementById('hero-board').addEventListener('mouseenter', () => {
+  userInteracted = true;
+});
+
+function runAutoDemo() {
+  if (demoDone || userInteracted) return;
+  demoDone = true;
+
+  const ghost = document.getElementById('ghost-cursor');
+  const hint  = document.querySelector('.pipe-hint');
+  const targetCard = document.getElementById('card-0');
+  if (!targetCard) return;
+
+  const boardRect = document.getElementById('hero-board').getBoundingClientRect();
+  const cardRect  = targetCard.getBoundingClientRect();
+
+  // Position ghost at board center-top first, then animate to card
+  const startX = boardRect.width * 0.5;
+  const startY = 20;
+  const targetX = (cardRect.left - boardRect.left) + cardRect.width * 0.5;
+  const targetY = (cardRect.top  - boardRect.top)  + cardRect.height * 0.5;
+
+  // Appear at start position
+  ghost.style.left = startX + 'px';
+  ghost.style.top  = startY + 'px';
+  ghost.style.opacity = '1';
+
+  // After transition completes, move to card
+  setTimeout(() => {
+    ghost.style.left = targetX + 'px';
+    ghost.style.top  = targetY + 'px';
+
+    // Pulse the hint bar
+    if(hint){ hint.classList.add('pulsing'); }
+
+    // After cursor arrives, pulse card then simulate click
+    setTimeout(() => {
+      targetCard.classList.add('card-pulsing');
+      ghost.classList.add('ghost-clicking');
+
+      setTimeout(() => {
+        // Fade ghost out and actually advance the card
+        ghost.style.opacity = '0';
+        ghost.classList.remove('ghost-clicking');
+        if (!userInteracted) {
+          advanceCard('card-0');
+        }
+        setTimeout(() => { hint.classList.remove('pulsing'); }, 1500);
+      }, 420);
+    }, 550);
+  }, 100);
+}
+
+// Trigger auto-demo 1.4s after board becomes visible
+const boardObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !demoDone) {
+      setTimeout(runAutoDemo, 1400);
+      boardObs.disconnect();
+    }
+  });
+}, {threshold:0.4});
+boardObs.observe(document.getElementById('hero-board'));
+
+// ===== Pipeline board =====
+// Track card column positions
+const cardCols = {
+  'card-0': 0,
+  'card-1': 0,
+  'card-2': 0,
+};
+
+const cardData = {
+  'card-0': {
+    name:'Priya Nambiar',
+    role:'Ops Lead · 4 yrs',
+    score1:'93',
+    score2:'91',
+    tags1:['Voice screened','ATS synced'],
+    tags2:['Structured Q&A','Score: 91/100'],
+    tag3:'Recommended',
+  },
+  'card-1': {
+    name:'Ritesh Kaul',
+    role:'CX Specialist · 2 yrs',
+    score1:'78',
+    score2:'74',
+    tags1:['Voice screened','Resume fit: 78'],
+    tags2:['Follow-up probed','Score: 74/100'],
+    tag3:'Review',
+  },
+  'card-2': {
+    name:'Simran Ahuja',
+    role:'BPO Manager · 6 yrs',
+    score1:'88',
+    score2:'85',
+    tags1:['Voice screened','Experience match'],
+    tags2:['Depth interview','Score: 85/100'],
+    tag3:'Recommended',
+  },
+};
+
+let movedCards = 0;
+
+function advanceCard(cardId) {
+  const card = document.getElementById(cardId);
+  const currentCol = cardCols[cardId];
+  const nextCol = currentCol + 1;
+
+  if (nextCol > 3) return; // already at end
+
+  // Move to next column
+  cardCols[cardId] = nextCol;
+
+  const data = cardData[cardId];
+  const slot = document.getElementById('slot-' + nextCol);
+
+  // Build updated card HTML
+  let newCardHTML = '';
+  if (nextCol === 1) {
+    newCardHTML = `
+      <div class="cand-card active" id="${cardId}" onclick="advanceCard('${cardId}')" data-col="1">
+        <div class="cand-score">${data.score1}</div>
+        <div class="cand-name">${data.name}</div>
+        <div class="cand-role">${data.role}</div>
+        <div class="cand-tags">
+          ${data.tags1.map(t => `<span class="ctag vi">${t}</span>`).join('')}
+        </div>
+        <div class="nova-badge">Nova screened</div>
+      </div>`;
+  } else if (nextCol === 2) {
+    newCardHTML = `
+      <div class="cand-card active" id="${cardId}" onclick="advanceCard('${cardId}')" data-col="2">
+        <div class="cand-score">${data.score2}</div>
+        <div class="cand-name">${data.name}</div>
+        <div class="cand-role">${data.role}</div>
+        <div class="cand-tags">
+          ${data.tags2.map(t => `<span class="ctag am">${t}</span>`).join('')}
+        </div>
+        <div class="nova-badge">Nova interviewed</div>
+      </div>`;
+  } else if (nextCol === 3) {
+    const isRecommended = data.tag3 === 'Recommended';
+    newCardHTML = `
+      <div class="cand-card done" id="${cardId}" data-col="3">
+        <div class="cand-score" style="color:var(--grn)">${data.score2}</div>
+        <div class="cand-name">${data.name}</div>
+        <div class="cand-role">${data.role}</div>
+        <div class="cand-tags">
+          <span class="ctag ${isRecommended ? 'gn' : 'am'}">${data.tag3}</span>
+          <span class="ctag">Report ready</span>
+        </div>
+      </div>`;
+    movedCards++;
+  }
+
+  // Remove card from previous column
+  card.remove();
+
+  // Append to new slot
+  slot.insertAdjacentHTML('beforeend', newCardHTML);
+
+  // Update counts
+  updateCounts();
+
+  // Update time display
+  updateTimeDisplay();
+}
+
+function updateCounts() {
+  [0,1,2,3].forEach(col => {
+    let count = 0;
+    if (col === 0) {
+      count = Object.values(cardCols).filter(c => c === 0).length;
+    } else {
+      count = document.querySelectorAll(`#slot-${col} .cand-card`).length;
+    }
+    const cnt = document.getElementById('cnt-' + col);
+    if (cnt) cnt.textContent = count;
+  });
+
+  // Progress bars
+  const total = 3;
+  const s1 = document.querySelectorAll('#slot-1 .cand-card').length;
+  const s2 = document.querySelectorAll('#slot-2 .cand-card').length;
+  const s3 = document.querySelectorAll('#slot-3 .cand-card').length;
+  const p1 = document.getElementById('prog-1');
+  const p2 = document.getElementById('prog-2');
+  const p3 = document.getElementById('prog-3');
+  if(p1) p1.style.width = (s1/total*100) + '%';
+  if(p2) p2.style.width = (s2/total*100) + '%';
+  if(p3) p3.style.width = (s3/total*100) + '%';
+}
+
+function updateTimeDisplay() {
+  const display = document.getElementById('time-display');
+  const sub = document.getElementById('time-sublabel');
+  const s3 = document.querySelectorAll('#slot-3 .cand-card').length;
+  const s2 = document.querySelectorAll('#slot-2 .cand-card').length;
+  const s1 = document.querySelectorAll('#slot-1 .cand-card').length;
+
+  if (s3 === 3) {
+    display.textContent = '< 30 minutes';
+    display.style.color = 'var(--grn)';
+    sub.textContent = 'full pipeline complete';
+  } else if (s3 >= 1) {
+    display.textContent = '< 48 hours';
+    display.style.color = 'var(--grn)';
+    sub.textContent = 'first shortlist ready';
+  } else if (s2 >= 1) {
+    display.textContent = '~ 2 hours';
+    display.style.color = 'var(--vi-t)';
+    sub.textContent = 'structured interviews done';
+  } else if (s1 >= 1) {
+    display.textContent = '~ 15 minutes';
+    display.style.color = 'var(--am-t)';
+    sub.textContent = 'Nova screening in progress';
+  } else {
+    display.textContent = 'click any card to start';
+    display.style.color = 'var(--t3)';
+    sub.textContent = '';
+  }
+}
+
+// Copy tabs
+function switchTab(btn, paneId) {
+  document.querySelectorAll('.copy-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.copy-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(paneId).classList.add('active');
+}
+</script>
+
+</body>
+</html>
